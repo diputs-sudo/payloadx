@@ -13,10 +13,11 @@
 
 import cmd
 import sys
-import os
+import os 
 import platform as _p
 import shlex
 import re
+import difflib
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -159,6 +160,11 @@ def validate_config(cfg: Dict[str, str]) -> List[str]:
         if not (ipv4.match(host) or ipv6.match(host)):
             errors.append("LHOST must be a valid IPv4 or IPv6 address.")
     return errors
+
+def typo_match(word: str, candidates: List[str]) -> Optional[str]:
+    word = word.lower()
+    matches = difflib.get_close_matches(word, candidates, n=1, cutoff=0.6)
+    return matches[0] if matches else None
 
 class PBShell(cmd.Cmd):
     intro = "\nPayloadBuilder X - type 'help' for commands.\n"
@@ -317,6 +323,26 @@ class PBShell(cmd.Cmd):
     def do_exit(self, _): print("Bye!"); return True
     do_quit = do_exit
     def emptyline(self): pass
+
+    def default(self, line: str):
+        words = line.strip().split()
+        if not words: return
+
+        user_input = words[0].lower()
+        args = " ".join(words[1:])
+
+        all_cmds = [method[3:] for method in dir(self) if method.startswith("do_")]
+
+        suggestion = typo_match(user_input, all_cmds)
+        if suggestion:
+            try:
+                confirm = input(f"[~] Did you mean '{suggestion}'? (enter/n): ").strip().lower()
+                if confirm in {"", "y", "yes"}:
+                    return getattr(self, f"do_{suggestion}")(args)
+            except KeyboardInterrupt:
+                print("\n✖ Cancelled.")
+                return
+        print(f"[!] Unknown command: {user_input}")
 
 if __name__ == "__main__":
     print(BANNER)
