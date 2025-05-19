@@ -1,0 +1,53 @@
+MIT-Based License with PBX Security Conditions v1.0
+
+Copyright (c) 2025 gemini
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, **provided that all the conditions below are met**.
+
+---
+
+## Conditions of Use (Security and Ethics)
+
+This Software is licensed **only** for use in the following lawful contexts:
+- Academic research;
+- Educational instruction;
+- Security training;
+- Authorized penetration testing with **explicit written permission** from the system owner.
+
+**You may not** use this Software:
+- For unauthorized access, surveillance, or data exfiltration;
+- On any system or network you do not own or have written consent to test;
+- In violation of any applicable laws or terms of service.
+
+**Violation of these Conditions of Use constitutes a material breach of license
+and immediately terminates all rights granted herein.**
+
+---
+
+## Attribution & License Preservation
+
+Redistribution, modification, or reuse of this Software or any derivatives **must**:
+- Preserve the original author's name: `gemini`;
+- Include this full license text in all copies, forks, or substantial portions of the Software;
+- Not remove, obscure, or misrepresent original authorship.
+
+You may add your name as a contributor but **may not replace or delete** the original credit.
+
+---
+
+## Liability and Disclaimer
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+BY USING THIS SOFTWARE, YOU ACCEPT FULL LEGAL RESPONSIBILITY FOR YOUR ACTIONS.
