@@ -49,7 +49,7 @@ BANNER = r"""
 
                 [ PayloadBuilder X ] 
 
-    ▸ Author: Zynk-dot (gemini)
+    ▸ Author: diputs-sudo
     ▸ Unauthorized use is illegal and YOUR responsibility
     ▸ Created for ethical red teaming, research, and education
 """
