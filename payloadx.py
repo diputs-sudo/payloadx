@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# PayloadBuilder X – CLI v0.0.1
+# PayloadBuilder X – CLI v0.0.2
 # 
 # Key commands
 # -------------
