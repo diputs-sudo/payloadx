@@ -89,7 +89,7 @@ def show_hacker_consent() -> None:
         print(f"[!] Failed to save consent preference: {e}")
         sys.exit(1)
 
-# ===== CLI Logic =====
+# === CLI Logic ===
 
 sys.path.append(str(Path(__file__).resolve().parent))
 from builder.compiler import compile_payload
