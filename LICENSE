@@ -1,13 +1,15 @@
-MIT-Based License with PBX Security Conditions v1.0
+PayloadBuilder-X Security Conditions v1.0
 
 Copyright (c) 2025 diputs-sudo
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, **provided that all the conditions below are met**.
+to use, copy, modify, merge, publish, and distribute copies of the Software, 
+and to permit persons to whom the Software is furnished to do so, provided 
+that all use fully complies with the Conditions of Use below, and that the 
+Software is **not** sublicensed, sold, or incorporated into any commercial offering 
+without prior written permission from the copyright holder (diputs-sudo).
 
 ---
 
@@ -20,12 +22,12 @@ This Software is licensed **only** for use in the following lawful contexts:
 - Authorized penetration testing with **explicit written permission** from the system owner.
 
 **You may not** use this Software:
-- For unauthorized access, surveillance, or data exfiltration;
-- On any system or network you do not own or have written consent to test;
-- In violation of any applicable laws or terms of service.
+- For unauthorized access, surveillance, or data exfiltration;  
+- On any system or network you do not own or have written consent to test;  
+- For the development, distribution, or deployment of malware, spyware, ransomware, or any other malicious software or activity;    
+- In violation of any applicable laws or terms of service.  
 
-**Violation of these Conditions of Use constitutes a material breach of license
-and immediately terminates all rights granted herein.**
+**Violation of these Conditions of Use constitutes a material breach of license and immediately terminates all rights granted herein.**
 
 ---
 
@@ -42,12 +44,15 @@ You may add your name as a contributor but **may not replace or delete** the ori
 
 ## Liability and Disclaimer
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL 
+THE AUTHOR OR COPYRIGHT HOLDER (DIPUTS-SUDO) BE LIABLE FOR ANY CLAIM, 
+DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR 
+OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE 
+USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-BY USING THIS SOFTWARE, YOU ACCEPT FULL LEGAL RESPONSIBILITY FOR YOUR ACTIONS.
+BY USING THIS SOFTWARE, YOU ACCEPT FULL LEGAL RESPONSIBILITY FOR YOUR ACTIONS. 
+THE AUTHOR, FOUNDER, CREATOR, AND DEVELOPER OF THIS SOFTWARE (DIPUTS-SUDO) SHALL 
+**NOT** BE HELD LIABLE FOR ANY MALICIOUS OR ILLEGAL USE OF THE SOFTWARE BY THIRD 
+PARTIES.
