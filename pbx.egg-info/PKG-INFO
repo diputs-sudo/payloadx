@@ -1,0 +1,179 @@
+Metadata-Version: 2.4
+Name: pbx
+Version: 0.0.3
+Summary: PBX - Modular payload generation framework.
+Author-email: diputs-sudo <you@example.com>
+License: MIT
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: license-file
+
+# PayloadBuilder X (PBX) v0.0.3
+
+**PayloadBuilder X (PBX)** is an experimental modular payload generator designed for flexibility and future extensibility. This is a **v0.0.3 development**, mainly for development and editing.
+
+---
+
+## Project Status: Development
+
+Note: v0.0.3 will introduce significant changes to the PBX architecture. Backward compatibility with v0.0.2 is not guaranteed.
+
+
+---
+
+## Project Structure 
+
+```
+/pbx/                           # Main package
+│
+├── cli/                        # CLI / UX layer
+│   ├── cli.py                  # Main entrypoint (thin)
+│   ├── core_shell.py           # PBShell class
+│   ├── command_handlers.py     # Build, scan, set, list, etc.
+│   ├── config.py               # Save/load configs
+│   ├── ui_elements.py          # Banners, consent screens, formatting
+│
+├── builder/                    # Build engine
+│   ├── blocks/                 # Payload building blocks
+│   │   ├── base/               # Open source blocks
+│   │   ├── stealth/            # Open source blocks
+│   │   ├── persistence/        # Open source blocks
+│   │   ├── addons/             # Open source blocks
+│   │   ├── watermark/          # Open source blocks
+│   │   ├── utilities/          # Open source helpers
+│   │   ├── README.md           # Explain block system
+│   │
+│   ├── plugins/                # Plugin system
+│   │   ├── base.py             # PluginBase definition
+│   │   ├── loader.py           # Secure plugin loader
+│   │   ├── trusted_plugins.json# Trusted plugin hashes
+│   │   ├── example_plugin/     # Example plugin
+│   │   │   ├── METADATA.json
+│   │   │   ├── plugin.py
+│   │
+│   ├── compiler.py             # Build pipeline driver
+│   ├── loader.py               # Block loader (with security validation)
+│   ├── metadata_schema.py      # METADATA validation rules
+│   ├── pipeline.py             # Modular build stages
+│   ├── security_hardener.py    # Safe mode enforcement
+│   ├── utils.py                # Shared utilities
+│   │
+│   ├── cache/                  # Build & scan cache
+│   │   ├── block_cache.json
+│   │   ├── plugin_cache.json
+│
+├── output/                     # Build artifacts
+│
+├── README.md                   # Project overview
+├── LICENSE
+├── pyproject.toml              # Packaging / pip metadata
+```
+
+## Block File Format
+
+Each payload block file must follow this format:
+
+`<category>__<name>__<platform>__<language>__<variant>.py`
+
+Each must define a `METADATA` dictionary:
+
+```python
+METADATA = {
+    "name": "example",
+    "platform": "win",
+    "language": "py",
+    "variant": "default",
+    "author": "YourName",
+    "description": "Example base block.",
+    "version": "0.0.1"
+    ... 
+}
+```
+
+---
+
+## Roadmap
+
+PBX is in early development. Here are the upcoming goals and improvements planned for current versions:
+
+### Planned for v0.0.3+
+- [ ] Support for multi-stage build pipelines (e.g., base → stealth → addon)
+- [ ] Cross-platform payload generation support
+- [ ] Plugin execution system for `.pbx` files
+- [ ] Output formatting and payload wrapping
+- [ ] Block dependency resolution
+- [ ] Obfuscation modules and modifier system
+- [ ] Metadata validation and schema checking
+- [ ] Logging and error reporting
+- [ ] Test suite (unit + integration)
+- [ ] Developer documentation and templates
+
+### CLI Features Planned
+
+CLI is intentionally lightweight — based on Python's `cmd.Cmd` for speed and simplicity.
+
+- `scan` → Scan for available blocks / addons / plugins.
+- `config save/load` → Save/load CLI configs for reproducible builds.
+- `wizard` → Optional guided build wizard for fast build flows.
+- `history` → View and replay previous builds.
+- `version` → Show PayloadBuilder X version.
+
+---
+
+## Running the CLI
+
+### For development:
+
+```bash
+python -m cli.cli
+```
+after installation: 
+```bash
+payloadx
+```
+
+---
+
+## Contributing
+
+Contributions are welcome and encouraged!
+
+### How to Contribute:
+- Submit new payload blocks using the proper naming and metadata format
+- Report issues or suggest features in the issue tracker
+- Review and improve core files (`compiler.py`, `loader.py`, etc.)
+
+> PBX is under active development. Expect frequent changes to structure and API.
+
+---
+
+## Acknowledgments
+
+Thanks to early testers and contributors experimenting with the concept and structure. Your feedback shapes PBX’s direction.
+
+---
+
+## License
+
+This project is licensed under a **MIT-Based License with PBX Security Conditions**.  
+Use of this software is subject to specific [Conditions of Use](./LICENSE) regarding lawful, ethical, and responsible security practices.  
+
+See the [LICENSE](./LICENSE) file for full details.
+
+---
+
+## Conditions of Use
+
+PayloadBuilder X is intended solely for lawful, ethical, and responsible security research and educational purposes.
+
+By using this software, you agree to comply with the [Conditions of Use](./LICENSE) defined in the project's license.
+
+Unauthorized use of this software for malicious purposes — including the development or deployment of malware, unauthorized system access, or any illegal activity — is strictly prohibited.
+
+Violation of these terms may result in legal consequences and immediate termination of your license to use this software.
+
+---
+
+*PBX is intended for **educational and research purposes only**. Use responsibly and only in controlled environments.*
+

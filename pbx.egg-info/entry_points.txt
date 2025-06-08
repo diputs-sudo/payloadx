@@ -1,0 +1,2 @@
+[console_scripts]
+pbx = pbx.cli.cli:main
