@@ -1,47 +1,69 @@
-# PayloadBuilder X (PBX) v0.0.2
+# PayloadBuilder X (PBX) v0.0.3
 
-**PayloadBuilder X (PBX)** is an experimental modular payload generator designed for flexibility and future extensibility. This is a **very early beta release**, mainly for testing and internal development.
-
----
-
-## Project Status: Alpha / Experimental
-
-This project is in **pre-release**. Many features are unimplemented or incomplete. Use it only for testing and experimentation.
+**PayloadBuilder X (PBX)** is an experimental modular payload generator designed for flexibility and future extensibility. This is a **v0.0.3 development**, mainly for development and editing.
 
 ---
 
-## What Works (v0.0.2)
+## Project Status: Development
 
-- Basic payload block loading from `/builder/blocks/`
-- Standardized block naming convention
-- `METADATA` structure for each block
-- Early-stage `compiler.py` logic
-- Preliminary support for plugin `.pbx` files (non-functional)
+Note: v0.0.3 will introduce significant changes to the PBX architecture. Backward compatibility with v0.0.2 is not guaranteed.
+
 
 ---
 
-## Directory Structure
+## Project Structure 
 
 ```
-/builder/
-├── compiler.py    # Core build logic
-├── loader.py      # Block discovery and loading
-├── blocks/
-│ ├── base/
-│ │ └── reverse_shell.macos.python.base.short.py.py
-│ ├── stealth/
-│ │ └── obfuscate_vars.all.python.stealth.default.py
-│ ├── persistence/
-│ │ └── mac_launch_agent.macos.python.persistence.default.py
+/pbx/                           # Main package
+│
+├── cli/                        # CLI / UX layer
+│   ├── cli.py                  # Main entrypoint (thin)
+│   ├── core_shell.py           # PBShell class
+│   ├── command_handlers.py     # Build, scan, set, list, etc.
+│   ├── config.py               # Save/load configs
+│   ├── ui_elements.py          # Banners, consent screens, formatting
+│
+├── builder/                    # Build engine
+│   ├── blocks/                 # Payload building blocks
+│   │   ├── base/               # Open source blocks
+│   │   ├── stealth/            # Open source blocks
+│   │   ├── persistence/        # Open source blocks
+│   │   ├── addons/             # Open source blocks
+│   │   ├── watermark/          # Open source blocks
+│   │   ├── utilities/          # Open source helpers
+│   │   ├── README.md           # Explain block system
+│   │
+│   ├── plugins/                # Plugin system
+│   │   ├── base.py             # PluginBase definition
+│   │   ├── loader.py           # Secure plugin loader
+│   │   ├── trusted_plugins.json# Trusted plugin hashes
+│   │   ├── example_plugin/     # Example plugin
+│   │   │   ├── METADATA.json
+│   │   │   ├── plugin.py
+│   │
+│   ├── compiler.py             # Build pipeline driver
+│   ├── loader.py               # Block loader (with security validation)
+│   ├── metadata_schema.py      # METADATA validation rules
+│   ├── pipeline.py             # Modular build stages
+│   ├── security_hardener.py    # Safe mode enforcement
+│   ├── utils.py                # Shared utilities
+│   │
+│   ├── cache/                  # Build & scan cache
+│   │   ├── block_cache.json
+│   │   ├── plugin_cache.json
+│
+├── output/                     # Build artifacts
+│
+├── README.md                   # Project overview
+├── LICENSE
+├── pyproject.toml              # Packaging / pip metadata
 ```
-
----
 
 ## Block File Format
 
 Each payload block file must follow this format:
 
-`<category><name><platform><language><variant>.py`
+`<category>__<name>__<platform>__<language>__<variant>.py`
 
 Each must define a `METADATA` dictionary:
 
@@ -54,30 +76,15 @@ METADATA = {
     "author": "YourName",
     "description": "Example base block.",
     "version": "0.0.1"
+    ... 
 }
 ```
 
 ---
 
-## Known Limitations (v0.0.2)
-
-- **Single-block only**: Pipelines with multiple stages (e.g., base → stealth → addon) are not yet supported.
-- **Platform-specific only**: Currently limited to hardcoded platforms (e.g., Windows); cross-platform behavior is unimplemented.
-- **No validation**: Block metadata is assumed to be correct; no schema enforcement or conflict detection.
-- **Plugins inactive**: `.pbx` plugin files are recognized but not executed.
-- **No output formatting**: Payloads are raw code snippets with no wrapping, obfuscation, or encoding.
-- **No dependency handling**: Blocks do not yet declare or resolve external requirements.
-
----
-
 ## Roadmap
 
-PBX is in early development. Here are the upcoming goals and improvements planned for future versions:
-
-### v0.0.2 (Current)
-- [x] Single-block compilation
-- [x] Basic block structure and metadata
-- [x] Initial `compiler.py` and `loader.py` prototypes
+PBX is in early development. Here are the upcoming goals and improvements planned for current versions:
 
 ### Planned for v0.0.3+
 - [ ] Support for multi-stage build pipelines (e.g., base → stealth → addon)
@@ -90,6 +97,30 @@ PBX is in early development. Here are the upcoming goals and improvements planne
 - [ ] Logging and error reporting
 - [ ] Test suite (unit + integration)
 - [ ] Developer documentation and templates
+
+### CLI Features Planned
+
+CLI is intentionally lightweight — based on Python's `cmd.Cmd` for speed and simplicity.
+
+- `scan` → Scan for available blocks / addons / plugins.
+- `config save/load` → Save/load CLI configs for reproducible builds.
+- `wizard` → Optional guided build wizard for fast build flows.
+- `history` → View and replay previous builds.
+- `version` → Show PayloadBuilder X version.
+
+---
+
+## Running the CLI
+
+### For development:
+
+```bash
+python -m cli.cli
+```
+after installation: 
+```bash
+payloadx
+```
 
 ---
 
