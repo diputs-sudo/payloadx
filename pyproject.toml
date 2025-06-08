@@ -15,4 +15,4 @@ requires-python = ">=3.8"
 dependencies = []
 
 [project.scripts]
-payloadx = "pbx.cli.cli:main"
+payloadx = "payloadx.cli.cli:main"
