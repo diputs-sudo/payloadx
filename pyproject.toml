@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "payloadbuilder-x"
+version = "0.0.3"
+description = "Modular payload compilation framework for ethical red teaming"
+authors = [
+    { name="diputs-sudo", email="diputs-sudo@proton.me" }
+]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = []
+
+[project.scripts]
+payloadx = "pbx.cli.cli:main"
