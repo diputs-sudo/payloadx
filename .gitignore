@@ -3,3 +3,13 @@ __pycache__/
 *pbx_decryptor*
 bin/
 .pbx_consent
+pbx.egg-info/
+*.pyc
+*.pyo
+*.pyd
+build/
+dist/
+.env
+.venv
+.idea/
+.vscode/
