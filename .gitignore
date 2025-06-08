@@ -1,4 +1,5 @@
 output/
 __pycache__/
-*pbx_decryptor.c
+*pbx_decryptor*
 bin/
+.pbx_consent
