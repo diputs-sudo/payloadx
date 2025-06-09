@@ -4,6 +4,7 @@ import sys
 import os
 from pathlib import Path
 from datetime import datetime
+from .color_utils import color
 
 # Path to consent file → parent of cli/
 CONSENT_FILE = Path(__file__).resolve().parent.parent.parent / ".pbx_consent"
@@ -24,7 +25,7 @@ BANNER = r"""
 """
 
 # Consent art
-CONSENT_ART = r"""
+CONSENT_ART = color(r"""
 ╔═════════════════════════════════════════════════════════════════╗
 ║                        PAYLOADBUILDER X                         ║
 ║                     OFFENSIVE SECURITY TOOL                     ║
@@ -43,7 +44,7 @@ CONSENT_ART = r"""
 ║                                                                 ║
 ║ To proceed, you must SIGN your name below.                      ║
 ╚═════════════════════════════════════════════════════════════════╝
-"""
+""", "red")
 
 def show_banner():
     print(BANNER)
@@ -70,13 +71,13 @@ def get_signed_name():
 
 def show_welcome_message():
     signed_name = get_signed_name()
-    print(f"\n+=== Welcome back {signed_name} ===+")
+    print(color(f"\n+=== Welcome back {signed_name} ===+", "green"))
 
 def show_hacker_consent():
     first_time = not CONSENT_FILE.exists()
 
     if not first_time:
-        return  # Consent already granted
+        return  
 
     print(CONSENT_ART)
 
