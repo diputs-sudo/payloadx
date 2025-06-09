@@ -3,7 +3,7 @@
 from pathlib import Path
 from datetime import datetime
 import uuid
-from builder import loader, mode_utils
+from . import loader, mode_utils
 
 class CompileError(Exception):
     pass

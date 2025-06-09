@@ -344,7 +344,10 @@ class PBShell(cmd.Cmd):
                 return
         print(f"[!] Unknown command: {user_input}")
 
-if __name__ == "__main__":
+def main():
     print(BANNER)
     show_hacker_consent()
     PBShell().cmdloop()
+
+if __name__ == "__main__":
+    main()
