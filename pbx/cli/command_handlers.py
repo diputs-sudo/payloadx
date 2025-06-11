@@ -260,9 +260,7 @@ def _show_history_top_bottom(direction, n):
 
 def handle_version():
     version = "v0.0.3"
-    build_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    print(color(f"\nPayloadBuilder X {version}", "green"))
-    print(color(f"Build date: {build_date}\n", "cyan"))
+    print(color(f"\nPayloadBuilder X {version}\n", "green"))
 
 # Helper to record history (called from build command)
 def record_history(cfg, success):
