@@ -7,7 +7,7 @@ from datetime import datetime
 from .color_utils import color
 
 # Path to consent file → parent of cli/
-CONSENT_FILE = Path(__file__).resolve().parent.parent.parent / ".pbx_consent"
+CONSENT_FILE = Path(__file__).resolve().parent.parent / ".pbx_consent"
 
 # Banner art
 BANNER = r"""
