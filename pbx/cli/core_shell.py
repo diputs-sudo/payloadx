@@ -12,7 +12,7 @@ from .color_utils import color
 
 class PBShell(cmd.Cmd):
     intro = "\nPayloadBuilder X - type 'help' for commands.\n"
-    prompt = color("payloadx ", "yellow") + color("> ", "blue")
+    prompt = color("payloadx ", "yellow") + color("> ", "cyan")
     cfg = {}
 
     def do_set(self, arg):
