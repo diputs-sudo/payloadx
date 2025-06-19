@@ -1,3 +1,5 @@
+# pbx/cli/core_shell.py
+
 import cmd
 import shlex
 import difflib
