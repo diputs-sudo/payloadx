@@ -7,7 +7,7 @@ name = "pbx"
 version = "0.0.3"
 description = "PBX - Modular payload generation framework."
 authors = [
-    { name="diputs-sudo", email="you@example.com" }
+    { name="diputs-sudo", email="diputs-sudo@proton.me" }
 ]
 license = { text = "MIT" }
 readme = "README.md"
