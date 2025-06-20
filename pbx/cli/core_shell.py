@@ -6,13 +6,21 @@ import difflib
 import os
 import time
 from pathlib import Path
+import re
 
 from . import command_handlers
 from .config import PAYLOAD_PROFILE, BUILTIN_CMDS, OPTIONS_INFO, SUBCOMMANDS
 from .color_utils import color
+from .command_handlers import record_history
+from pbx.builder import compiler, scanner 
 
 
 class PBShell(cmd.Cmd):
+    def __init__(self):
+        super().__init__()
+        self.cfg = {}
+        self._last_complete_line = None
+
     intro = "\nPayloadBuilder X - type 'help' for commands.\n"
     prompt = color("payloadx ", "yellow") + color("> ", "cyan")
     cfg = {}
@@ -27,6 +35,7 @@ class PBShell(cmd.Cmd):
         # Handle set history SERIAL_NUM
         if parts[0].lower() == "history" and len(parts) == 2:
             serial_num = parts[1]
+            serial_num = re.sub(r"\x1b\[[0-9;]*m", "", serial_num)
             path = Path(__file__).resolve().parent.parent / "history" / "history.log"
 
             if not path.exists():
@@ -69,6 +78,10 @@ class PBShell(cmd.Cmd):
 
             # Special case: first time, allow setting payload_type
             if "payload_type" not in self.cfg:
+                if opt == "history":
+                    print("[!] Use: set history SERIAL_NUM (not as a config option)")
+                    return
+
                 if opt != "payload_type":
                     available = ", ".join(PAYLOAD_PROFILE.keys())
                     print("[!] Please set payload_type first. Use: set payload_type VALUE")
@@ -110,8 +123,38 @@ class PBShell(cmd.Cmd):
             self.cfg[opt] = val
             print(f"{opt} = {val}")
 
+    def _print_block(self, lines):
+        """
+        Print multiple lines cleanly and reprint prompt.
+        """
+        for line in lines:
+            print("  " + line)
+        print()  # spacing
+        self.stdout.write(self.prompt)
+        self.stdout.flush()
+
     def complete_set(self, text, line, begidx, _end):
-        # Special case: first time → allow payload_type completion
+
+        if line.strip().startswith("set history"):
+            history_path = Path(__file__).resolve().parent.parent / "history" / "history.log"
+            if not history_path.exists():
+                return []
+
+            lines = history_path.read_text().splitlines()
+            if not lines:
+                return []
+
+            # Only print once per input session
+            if not self._printed_history_hint:
+                self._print_block(lines[-3:])
+                self._printed_history_hint = True
+
+            return []  # ← the key fix: return NOTHING so readline doesn't try to complete it
+
+        # Reset hint if no longer in `set history`
+        self._printed_history_hint = False
+
+        # Special case: first time → allow payload_type and history
         if "payload_type" not in self.cfg:
             arg_str = line[4:] if line.lower().startswith("set ") else line
             rel_idx = begidx - (4 if line.lower().startswith("set ") else 0)
@@ -120,14 +163,14 @@ class PBShell(cmd.Cmd):
             tokens = shlex.split(segment)
 
             if len(tokens) == 0 or (len(tokens) == 1 and not segment.endswith(" ")):
-                return ["payload_type"]
+                return [k for k in ["payload_type", "history"] if k.startswith(text)]
 
             if tokens[0] == "payload_type":
                 return [pt for pt in PAYLOAD_PROFILE.keys() if pt.startswith(text)]
 
             return []
 
-        # Normal case → after payload_type is set
+        # Normal completion after payload_type is set
         pt = self.cfg.get("payload_type")
         profile = PAYLOAD_PROFILE.get(pt)
 
@@ -142,11 +185,9 @@ class PBShell(cmd.Cmd):
 
         valid_keys = profile["required"] + profile["optional"]
 
-        # Tab completing option names
         if len(tokens) == 0 or (len(tokens) == 1 and not segment.endswith(" ")):
             return [o for o in valid_keys if o.startswith(text)]
 
-        # Tab completing option values
         opt = tokens[0]
         if opt not in valid_keys:
             return []
@@ -171,52 +212,102 @@ class PBShell(cmd.Cmd):
         except Exception:
             print("[!] Clear failed.")
 
-    # def do_build(self, _):
-    #     pt = self.cfg.get("payload_type")
+    def do_build(self, _):
+        from pbx.builder import compiler
+        from pbx.cli.command_handlers import record_history
+        from pbx.cli.config import PAYLOAD_PROFILE
 
-    #     if not pt:
-    #         print("[!] Please set payload_type first.")
-    #         return
+        pt = self.cfg.get("payload_type")
+        if not pt:
+            print(color("[!] Please set payload_type first.", "red"))
+            return
 
-    #     profile = PAYLOAD_PROFILE.get(pt)
+        profile = PAYLOAD_PROFILE.get(pt)
+        if not profile:
+            print(color(f"[!] Unknown payload_type '{pt}'.", "red"))
+            return
 
-    #     if not profile:
-    #         print(f"[!] Unknown payload_type '{pt}'.")
-    #         return
+        required = profile["required"]
+        defaults = profile["defaults"]
 
-    #     required = profile["required"]
-    #     defaults = profile["defaults"]
+        spec = defaults.copy()
+        spec.update(self.cfg)
 
-    #     spec = defaults.copy()
-    #     spec.update(self.cfg)
+        missing = [key for key in required if not spec.get(key)]
+        if missing:
+            print(color("\n[!] Missing required option(s):", "red") + " " + ", ".join(missing))
+            print("    ➔ Use  set OPTION VALUE   (TAB completes names/values)")
+            print("    ➔ Or   list              (see * items that are still blank)\n")
+            return
 
-    #     missing = [key for key in required if not spec.get(key)]
+        errors = compiler.validate_config(spec)
+        if errors:
+            print(color("\n[!] Validation error(s):", "red"))
+            for e in errors:
+                print(f"    - {e}")
+            print("    ➔ Fix with  set OPTION VALUE\n")
+            return
 
-    #     if missing:
-    #         print("\n[!] Missing required option(s):", ", ".join(missing))
-    #         print("    ➔ Use  set OPTION VALUE   (TAB completes names/values)")
-    #         print("    ➔ Or   list              (see * items that are still blank)\n")
-    #         return
+        print(color("\n[+] Building payload …", "green"))
 
-    #     errors = command_handlers.validate_config(spec)
+        try:
+            out_path = compiler.build(spec)
+        except Exception as exc:
+            print(color(f"[!] Build failed: {exc}", "red"))
+            record_history(self.cfg, success=False)
+            return
 
-    #     if errors:
-    #         print("\n[!] Validation error(s):")
-    #         for e in errors:
-    #             print("    -", e)
-    #         print("    ➔ Fix with  set OPTION VALUE\n")
-    #         return
+        print("\n+==================================================+")
+        print("| Build Summary                                    |")
+        print("+==================================================+")
+        print(f"| Payload Type   : {pt.ljust(40)}|")
+        print(f"| Build Time     : {time.strftime('%Y-%m-%d %H:%M:%S')}              |")
+        print("+--------------------------------------------------+")
 
-    #     print("\n[+] Building payload …")
-    #     time.sleep(1)
+        keys_to_show = profile["required"] + profile["optional"]
+        max_key_len = max(len(k) for k in keys_to_show)
 
-    #     out_path = f"./output/{pt}_{int(time.time())}.bin"
-    #     print(f"[✓] Payload saved to: {out_path}\n")
+        for k in keys_to_show:
+            v = spec.get(k)
+            if v:
+                print(f"| {k.ljust(max_key_len)} : {str(v).ljust(40)}|")
 
-        command_handlers.record_history(self.cfg, success=True)
+        print("+--------------------------------------------------+")
+        print(color(f"[✓] Payload saved to: {out_path}", "green"))
+
+        if pt == "reverse_shell":
+            port = spec["port"]
+            print("\n" + color("[*] Listener hint:", "cyan"))
+            print(f"    nc -lvnp {port}")
+            print(f"    netcat -lvnp {port}")
+            print(f"    ncat -lv {port}")
+        print()
+
+        record_history(self.cfg, success=True)
 
     def do_scan(self, arg):
-        command_handlers.handle_scan(arg)
+        from pbx.builder import scanner
+        target = arg.strip().lower()
+
+        if not target:
+            print("[!] Usage: scan all|blocks|plugins")
+            return
+
+        print(color(f"[*] Scanning for {target} ...", "cyan"))
+
+        try:
+            if target == "all":
+                count = scanner.scan_all()
+            elif target == "blocks":
+                count = scanner.scan_blocks("blocks")
+            elif target == "plugins":
+                count = scanner.scan_plugins()
+            else:
+                print(f"[!] Unknown scan target: {target}")
+                return
+            print(color(f"[✓] Scan complete: {count} item(s) indexed.", "green"))
+        except Exception as e:
+            print(color(f"[!] Scan failed: {e}", "red"))
 
     def do_config(self, arg):
         command_handlers.handle_config(self.cfg, arg)
@@ -319,6 +410,10 @@ class PBShell(cmd.Cmd):
         return []
 
     def do_exit(self, _):
+        if self.cfg.get("payload_type"):
+            from pbx.cli.command_handlers import record_history
+            record_history(self.cfg, success=False, on_exit=True)
+            print(color("[*] Saved current config to history on exit.", "cyan"))
         print("Bye!")
         return True
 
