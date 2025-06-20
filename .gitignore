@@ -13,5 +13,6 @@ dist/
 .venv
 .idea/
 .vscode/
+.DS_Store
 history/
 index/
